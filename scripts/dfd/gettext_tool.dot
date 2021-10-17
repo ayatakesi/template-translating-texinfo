@@ -1,0 +1,38 @@
+digraph dfd{
+    compound=true;
+    ranksep=0.75;
+    subgraph cluster0 {
+	texi [label="*.texi" shape=folder];
+	texi_pot [label="*.texi.po" shape=folder];
+	texi_pl [label="*.texi.pl" shape="parallelogram"];
+	texi_po [label="*.texi.po" shape=folder];
+	texi_ll [label="*.texi" shape=folder];
+	gettextize [label="gettextize" shape=ellipse style=filled];
+	msginit [label="msginit" shape=ellipse style=filled];
+	translate [label="translate" shape=ellipse style=filled];
+	msgmerge [label="msgmerge" shape=ellipse style=filled];
+	po4a [label="po4a_tool.sh translate" shape=ellipse style=dashed];
+	perl [label="perl interpreter" shape=ellipse style=dashed];
+	label="gettext_tool.sh";	
+
+	texi -> gettextize [label="${TEXI_FOLDER}/*.texi"];
+	gettextize -> texi_pot [label="po/gettext/${TEXI_FOLDER}/C/LCMESSAGES/*.po(pot)"];
+	gettextize -> texi_pl [label="scripts/${TEXI_FOLDER}/*.pl"];
+	texi_pot -> msginit;
+	msginit -> texi_po [label="po/gettext/${TEXI_FOLDER}/${LINGUA}/LCMESSAGES/*.po"];
+	po4a -> texi_ll [style=dotted label="translated/${TEXI_FOLDER}/${LINGUA}/*.texi"];
+	translate -> perl [label="execute" color="red"]
+	texi_ll -> perl [label="a1." fontcolor="red"];
+	texi_po -> perl [label="a2." fontcolor="red"];
+	texi_pl -> perl [label="a3." fontcolor="red"];
+	perl -> texi_ll [label="a4." fontcolor="red"]
+	texi_pot -> msgmerge [label="b1." fontcolor="blue"];
+	texi_po -> msgmerge [label="b2." fontcolor="blue"];
+	msgmerge -> texi_po [label="b3." fontcolor="blue"];
+    }
+    TEXI_FOLDERS [label="TEXI_FOLDERS" shape=tab];
+    LINGUAS [label="LINGUAS" shape=tab];
+    
+    TEXI_FOLDERS -> texi[label="${TEXI_FOLDER}" lhead=cluster0];
+    LINGUAS -> texi[label="${LINGUA}" lhead=cluster0];
+}

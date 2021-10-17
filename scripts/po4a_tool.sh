@@ -59,27 +59,27 @@ function main () {
 			    POT_FILE=${PO4A_ROOT}/${TEXI_FOLDER}/C/${TEXI_NAME}.po;
 			    PO_FILE=${PO4A_ROOT}/${TEXI_FOLDER}/${LINGUA}/${TEXI_NAME}.po;
 			    echo -n "Copying ${POT_FILE} to ${PO_FILE} ... "
-			    [ -d ${PO4A_ROOT}/${TEXI_FOLDER}/${LINGUA} ] ||
-				mkdir -p ${PO4A_ROOT}/${TEXI_FOLDER}/${LINGUA};
+			    [ -d ${PO4A_ROOT}/${TEXI_FOLDER}/${LINGUA} ] || mkdir -p ${PO4A_ROOT}/${TEXI_FOLDER}/${LINGUA};
 			    cp -pf ${POT_FILE} ${PO_FILE};
 			    echo "done.";
 			    ;;
 
 			"translate")
 			    TRANSLATED_ROOT=${REPOSITORY_ROOT}/translated;
-			    TRANSLATED_DIRECTORY=${TRANSLATED_ROOT}/${TEXI_FOLDER};
+			    TRANSLATED_DIRECTORY=${TRANSLATED_ROOT}/${TEXI_FOLDER}/${LINGUA};
 
-			    TEXI_STEM=$(basename ${TEXI_FILE} .texi);
-			    PO_FILE=${PO4A_ROOT}/${TEXI_FOLDER}/${LINGUA}/${TEXI_STEM}.texi.po;
-			    TRANSLATED_TEXINAME=${TEXI_STEM}-${LINGUA}.texi;
+			    TEXI_NAME=$(basename ${TEXI_FILE});
+			    PO_FILE=${PO4A_ROOT}/${TEXI_FOLDER}/${LINGUA}/${TEXI_NAME}.po;
+			    TRANSLATED_TEXI=${TRANSLATED_DIRECTORY}/${TEXI_NAME};
 
-			    echo -n "Translating ${TEXI_FILE} to ${TRANSLATED_TEXINAME} with ${PO_FILE} ... ";
+			    echo -n "Translating ${TEXI_FILE} to ${TRANSLATED_TEXI} with ${PO_FILE} ... ";
+			    [ -d ${TRANSLATED_DIRECTORY} ] || mkdir -p ${TRANSLATED_DIRECTORY};
 			    po4a-translate -f texinfo \
 					   -k 0 \
 					   -M utf8 \
 					   -m ${TEXI_FILE} \
 					   -p ${PO_FILE} \
-					   -l ${TRANSLATED_DIRECTORY}/${TRANSLATED_TEXINAME};
+					   -l ${TRANSLATED_TEXI};
 			    echo "done.";
 			    ;;
 

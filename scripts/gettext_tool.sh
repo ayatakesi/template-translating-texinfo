@@ -71,13 +71,12 @@ function main () {
 			"translate")
 			    TEXI_PATH=$(dirname ${TEXI_FILE});
 			    TEXI_NAME=$(basename ${TEXI_FILE});
-			    TEXI_STEM=$(basename ${TEXI_FILE} .texi);
 			    PO_DIRECTORY=${GETTEXT_ROOT}/${TEXI_FOLDER}/${LINGUA}/LC_MESSAGES;
 			    PO_FILE=${PO_DIRECTORY}/${TEXI_NAME}.po;
 			    TRANSLATED_ROOT=${REPOSITORY_ROOT}/translated;
-			    TRANSLATED_FOLDER=${TRANSLATED_ROOT}/${TEXI_FOLDER};
+			    TRANSLATED_FOLDER=${TRANSLATED_ROOT}/${TEXI_FOLDER}/${LINGUA};
 			    [ -d  ${TRANSLATED_FOLDER} ] || mkdir -p ${TRANSLATED_FOLDER};
-			    TRANSLATED_TEXI=${TRANSLATED_FOLDER}/${TEXI_STEM}-${LINGUA}.texi;
+			    TRANSLATED_TEXI=${TRANSLATED_FOLDER}/${TEXI_NAME};
 			    SCRIPT_DIRECTORY=$(realpath --relative-to ${REPOSITORY_ROOT} ${SCRIPT_ROOT}/${TEXI_FOLDER});
 			    PERL_FILTER=${SCRIPT_DIRECTORY}/${TEXI_NAME}.pl;
 
@@ -85,7 +84,7 @@ function main () {
 			    msgfmt -o ${PO_DIRECTORY}/${TEXI_NAME}.mo ${PO_FILE};
 			    TEMP_TEXI=$(mktemp);
 			    
-			    cat ${TEXI_FILE} |
+			    cat ${TRANSLATED_TEXI} |
 				LANGUAGE=${LINGUA} ${PERL_FILTER} >${TEMP_TEXI};
 			    cat ${TEMP_TEXI} >${TRANSLATED_TEXI};
 			    rm -f ${TEMP_TEXI};
@@ -108,7 +107,7 @@ function main () {
 				     /dev/null ${NEW_POT_FILE} |
 				msgcat --no-wrap - > ${MERGED_PO};
 			    
-			    cp -pf ${MERGED_PO} ${OLD_PO_FILE};
+A			    cp -pf ${MERGED_PO} ${OLD_PO_FILE};
 			    rm -f ${MERGED_PO};
 			    echo "done.";
 			    ;;
@@ -127,7 +126,7 @@ function generate_gettext_filter () {
     GREP_STRING=${3};
     TEXTDOMAIN_DIRECTORY=${4};
 
-    TEXI_NAME=$(basename ${TEXI_FILE});
+-    TEXI_NAME=$(basename ${TEXI_FILE});
     SCRIPT_NAME=${TEXI_NAME}.pl;
     SCRIPT_FILE=${SCRIPT_DIRECTORY}/${SCRIPT_NAME};
 

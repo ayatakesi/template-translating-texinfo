@@ -1,0 +1,6 @@
+# put texinfo files folder relatively from repository root
+#
+
+doc/emacs
+# doc/lispref
+

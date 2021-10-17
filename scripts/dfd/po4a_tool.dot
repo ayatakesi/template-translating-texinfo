@@ -1,0 +1,31 @@
+digraph dfd{
+    compound=true;
+    ranksep=0.75;
+    subgraph cluster0 {
+	texi [label="*.texi" shape=folder];
+	texi_pot [label="*.texi.po(pot)" shape=folder];
+	texi_po [label="*.texi.po" shape=folder];
+	texi_ll [label="*.texi" shape=folder];
+	gettextize [label="gettextize" shape=ellipse style=filled];
+	msginit [label="msginit" shape=ellipse style=filled];
+	translate [label="translate" shape=ellipse style=filled];
+	msgmerge [label="msgmerge" shape=ellipse style=filled];
+	label="po4a_tool.sh";	
+
+	texi -> gettextize [label="${TEXI_FOLDER}/*.texi"];
+	gettextize -> texi_pot [label="po/po4a/${TEXI_FOLDER}/C/*.po"];
+	texi_pot -> msginit;
+	msginit -> texi_po [label="po/po4a/${TEXI_FOLDER}/${LINGUA}/*.po"];
+	texi -> translate;
+	texi_po -> translate;
+	translate -> texi_ll [label="translated/${TEXI_FOLDER}/${LINGUA}/*.texi"];
+	texi_pot -> msgmerge;
+	texi_po -> msgmerge;
+	msgmerge -> texi_po;
+    }
+    TEXI_FOLDERS [label="TEXI_FOLDERS" shape=tab];
+    LINGUAS [label="LINGUAS" shape=tab];
+    
+    TEXI_FOLDERS -> texi[label="${TEXI_FOLDER}" lhead=cluster0];
+    LINGUAS -> texi[label="${LINGUA}" lhead=cluster0];
+}

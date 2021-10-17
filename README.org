@@ -1,0 +1,53 @@
+#+title: Template fo translating Texinfo files.
+
+* Requirement
+** GNU gettext
+for handling gettext's po-format files.
+
+** po4a
+To extract and translate Texinfo files with gettext's po-format files.
+
+** libintl-perl(optional)
+Required by scripts/gettext_tool.sh
+
+* Howto use
+
+** Copy folders to repository's root.
+Copy folders that includes texinfo files you want to translate.
+
+** Configure TEXI_FOLDERS file
+Open file ./TEXI_FOLDERS and write folder's path that contains texinfo files(relative from repository's root).
+
+** Configure LINGUAS file
+Decide your language code, and put it in  file ./LINGUAS.
+
+** Run ./scripts/po4a_tool.sh gettextize
+Run ./scripts/po4a_tool.sh with argument "gettextize". That creates po/po4a/${TEXI_FOLDER}/C/*.po. Here, ${TEXI_FOLDER} is a path-to-texinfo files stored in. It was read from above TEXI_FOLDERS file.
+
+** Run ./scripts/gettext_tool.sh msginit
+Run ./scripts/po4a_tool.sh with argument "msginit". That just copy po/po4a/${TEXI_FOLDER}/C/*.po to po/po4a/${TEXI_FOLDER}/${LINGUA}. Here, ${LINGUA} is language code you want to translate to. It was read from above LINGUAS file.
+
+** Translate.
+Your turn, now. Translate po/po4a/${TEXI_FOLDER}/${LINGUA}/*.po to your language(it may take some time).
+
+** Apply translations
+Run ./scripts/po4a_tool.sh with argument "translate". This read ${TEXI_FOLDER}/*.texi and apply translated po/po4a/${TEXI_FOLDER}/${LINGUA}/*.po, and then writes results to translated/${TEXI_FOLDER}/${LINGUA}/*.texi.
+
+** Update message catalogs
+When you update ${TEXI_FOLDER}/*.texi, you can run ./scripts/po4a_tool.sh with argument "gettextize", and then with "msgmerge " to reflect translations already exists for newly created po files.
+
+** Optional
+Texinfo doesn't meant to be translated with po4a likes. So translating same sentence that belongs different context is sometime difficult. By this reson, I create a little bit strange perl filter. Duaring my translating experiments of Texinfo files, @chapter, @section,... Texinfo markups are affected seriously. If you encounter same problems, this may be help.
+
+*** Run scripts/gettext_tool.sh with argument "gettextize"
+It creates po/gettext/${TEXI_FOLDER}/C/LC_MESSAGES/*.po and scripts/${TEXI_FOLDER}/*.pl.
+
+*** Run scripts/gettext_tool.sh with argument "msginit"
+It copies po/gettext/${TEXI_FOLDER}/C/LC_MESSAGES/*.po to po/gettext/${TEXI_FOLDER}/${LINGUA}/LC_MESSAGES/*.po
+
+*** Translate
+Your turn, again. Translate po/gettext/${TEXI_FOLDER}/${LINGUA}/LC_MESSAGES/*.po.
+
+*** Run scripts/gettext_tool.sh with argument "translate"
+This read translated/${TEXI_FOLDER}/${LINGUA}/*.texi(NOT original ${TEXI_FOLDER}/*.texi. You should run po4a_tool.sh with argument "translate" before this step), and apply translated po/gettext/${TEXI_FOLDER}/${LINGUA}/LC_MESSAGES/*.po, and then writes back results to translated/${TEXI_FOLDER}/${LINGUA}/*.texi.
+
