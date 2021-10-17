@@ -11,11 +11,19 @@ function main () {
     cd ${REPOSITORY_ROOT};
     while read TEXI_FOLDER
     do
-	[ $(echo ${TEXI_FOLDER} | cut -b -1) == '#' ] && continue;
+	if [ "${TEXI_FOLDER}"x == x ] ||
+	       [ $(echo ${TEXI_FOLDER} | cut -b -1) == '#' ]
+	then
+	    continue;
+	fi
 
 	for TEXI_FILE in ${REPOSITORY_ROOT}/${TEXI_FOLDER}/*.texi
 	do
-	    [ $(echo ${TEXI_FILE} | cut -b -1) == '#' ] && continue;
+	    if [ "${TEXI_FILE}"x == x ] ||
+		   [ $(echo ${TEXI_FILE} | cut -b -1) == '#' ]
+	    then
+		continue;
+	    fi
 	    
 	    if [ ${COMMAND} == "gettextize" ]
 	    then
@@ -42,7 +50,11 @@ function main () {
 	    else
 		while read LINGUA
 		do
-		    [ $(echo ${LINGUA} | cut -b -1) == '#' ] && continue;
+		    if [ "${LINGUA}"x == x ] ||
+			   [ $(echo ${LINGUA} | cut -b -1) == '#' ]
+		    then
+			continue;
+		    fi
 		    
 		    case ${COMMAND} in
 			"msginit")
