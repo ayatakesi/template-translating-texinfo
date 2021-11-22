@@ -126,7 +126,7 @@ function generate_gettext_filter () {
     GREP_STRING=${3};
     TEXTDOMAIN_DIRECTORY=${4};
 
--    TEXI_NAME=$(basename ${TEXI_FILE});
+    TEXI_NAME=$(basename ${TEXI_FILE});
     SCRIPT_NAME=${TEXI_NAME}.pl;
     SCRIPT_FILE=${SCRIPT_DIRECTORY}/${SCRIPT_NAME};
 
